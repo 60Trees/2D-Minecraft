@@ -163,7 +163,7 @@ def inventory_hotbarSetup(x, y):
         if MOUSE_x > posX and MOUSE_y > posY and MOUSE_x < posX + pic2.get_width() * sze and MOUSE_y < posY + pic2.get_height() * sze: # -------- WHERE IT CHANGES TILE SELECTED -----------
             pic2 = INVENTORY_ID[12]
             global HOTBAR_TileSelected
-            HOTBAR_TileSelected = 999
+            HOTBAR_TileSelected = INVENTORY_index
             WIN.blit(
                 pygame.transform.scale(pic2,
                 (pic2.get_width() * sze,
