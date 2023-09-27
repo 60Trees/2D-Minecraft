@@ -92,15 +92,25 @@ sur = tilemap_draw()
 invCooldown = 0
 invCooldownState = False
 F3_Cooldown = 0
+# ----------------------------------------------------------------------------------------- PIXELS FUNCTION ---------------------------------------------------------------------------------
 
-drawPos = 0
-drawPosX, drawPosY = drawPos, drawPos
-
-INVENTORY_index = 0
+def pixels_setup(pixelSZE):
+    global PIXEL_sze
+    PIXEL_sze = pixelSZE
+    
+    
+# ----------------------------------------------------------------------------------------- INVENTORY SETUP ---------------------------------------------------------------------------------
 
 sze = 5
 
-# ----------------------------------------------------------------------------------------- INVENTORY SETUP ---------------------------------------------------------------------------------
+pixels_setup(sze)
+drawPos = 0
+drawPosX, drawPosY = drawPos, drawPos
+
+def pixels(AmountOfPixels):
+    return AmountOfPixels * PIXEL_sze
+
+INVENTORY_index = 0
 
 def inventory_setup(CreativeOrSurvival, x, y):
     if CreativeOrSurvival == "Creative":
@@ -110,27 +120,27 @@ def inventory_setup(CreativeOrSurvival, x, y):
 
     else: pic = INVENTORY_ID[0] 
 
-    drawPos = round((sizeX / 2) - ((pic.get_width() * sze) / 2)), sizeY / 6 
+    drawPos = round((sizeX / 2) - ((pixels(pic.get_width())) / 2)), sizeY / 6 
     drawPosX, drawPosY = drawPos    
 
-    WIN.blit(pygame.transform.scale(pic, (pic.get_width() * sze, pic.get_height() * sze)), drawPos)     
+    WIN.blit(pygame.transform.scale(pic, (pixels(pic.get_width()), pixels(pic.get_height()))), drawPos)     
 
     for INVENTORY_index in range(len(INVENTORY_current) - 1):
         pic2 = TILEMAP_blockID[INVENTORY_current[INVENTORY_index + 1]]
         tposX, tposY = SlotPos_CURRENT[INVENTORY_index + 1]
-        posX = (tposX * sze + drawPosX) - 1 * sze
-        posY = (tposY * sze + drawPosY) - 1 * sze
+        posX = (pixels(tposX) + drawPosX) - pixels(1)
+        posY = (pixels(tposY) + drawPosY) - pixels(1)
         pic2 = pygame.transform.scale(pic2,
-                (pic2.get_width() * sze,
-                    pic2.get_height() * sze))
+                (pixels(pic2.get_width()),
+                    pixels(pic2.get_height())))
         if INVENTORY_current[INVENTORY_index + 1] != 0:
             WIN.blit(pic2, (posX, posY))
-        if MOUSE_x > posX and MOUSE_y > posY and MOUSE_x < posX + pic2.get_width() and MOUSE_y < posY + pic2.get_height():
+        if MOUSE_x > posX - sze and MOUSE_y > posY - sze and MOUSE_x < posX + pic2.get_width() + sze and MOUSE_y < posY + pic2.get_height() + sze:
             pic2 = INVENTORY_ID[12]
             WIN.blit(
                 pygame.transform.scale(pic2,
-                (pic2.get_width() * sze,
-                    pic2.get_height() * sze)),
+                (pixels(pic2.get_width()),
+                    pixels(pic2.get_height()))),
                 (posX, posY))      
             
         
@@ -142,7 +152,7 @@ HOTBAR_posEnd = []
 def inventory_hotbarSetup(x, y):
 
     pic = INVENTORY_ID[9]
-    pic = pygame.transform.scale(pic, (pic.get_width() * sze, pic.get_height() * sze))
+    pic = pygame.transform.scale(pic, (pixels(pic.get_width()), pixels(pic.get_height())))
     WIN.blit(pic, (x, y))
 
     HOTBAR_pos = []
@@ -157,17 +167,17 @@ def inventory_hotbarSetup(x, y):
         if pic2 != TILEMAP_blockID[0]:
             WIN.blit(
                 pygame.transform.scale(pic2,                # resized image
-                    (pic2.get_width() * sze,                # resized image width
-                    pic2.get_height() * sze)),              # resized image height
+                    (pixels(pic2.get_width()),                # resized image width
+                    pixels(pic2.get_height()))),              # resized image height
                     (posX, posY))                           # blit X, blit Y
-        if MOUSE_x > posX and MOUSE_y > posY and MOUSE_x < posX + pic2.get_width() * sze and MOUSE_y < posY + pic2.get_height() * sze: # -------- WHERE IT CHANGES TILE SELECTED -----------
+        if MOUSE_x > posX and MOUSE_y > posY and MOUSE_x < posX + pixels(pic2.get_width()) and MOUSE_y < posY + pixels(pic2.get_height()): # -------- WHERE IT CHANGES TILE SELECTED -----------
             pic2 = INVENTORY_ID[12]
             global HOTBAR_TileSelected
             HOTBAR_TileSelected = INVENTORY_index
             WIN.blit(
                 pygame.transform.scale(pic2,
-                (pic2.get_width() * sze,
-                    pic2.get_height() * sze)),
+                (pixels(pic2.get_width()),
+                    pixels(pic2.get_height()))),
                 (posX, posY))
         else:
             HOTBAR_TileSelected = -1
